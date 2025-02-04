@@ -6,9 +6,14 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="08.Spring_Web_MVC" />
+        <module name="06.Runtime_Value_Injection" />
+        <module name="07.Module_Environment" />
         <module name="02.Spring_bean_LIfe_Cycle" />
         <module name="01.Spring_Core" />
+        <module name="04.FullMode_vs_LightMod" />
         <module name="03.Spring_DI" />
+        <module name="05.Configuration" />
       </profile>
     </annotationProcessing>
   </component>
