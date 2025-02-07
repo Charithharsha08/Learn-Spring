@@ -14,6 +14,7 @@
         <module name="01.Spring_Core" />
         <module name="04.FullMode_vs_LightMod" />
         <module name="03.Spring_DI" />
+        <module name="10.BackEnd" />
         <module name="05.Configuration" />
       </profile>
     </annotationProcessing>
