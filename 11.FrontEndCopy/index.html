@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #f8f9fa;
+            font-family: 'Arial', sans-serif;
+        }
+        .form-container, .table-container {
+            background: #2d2d2d;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+        .form-container h2, .table-container h3 {
+            color: #ff6f61;
+            font-weight: bold;
+            text-align: center;
+        }
+        .form-label {
+            color: #f8f9fa;
+            font-weight: 500;
+        }
+        .form-control {
+            background-color: #3d3d3d;
+            border: 1px solid #555;
+            color: #f8f9fa;
+        }
+        .form-control:focus {
+            background-color: #4d4d4d;
+            border-color: #ff6f61;
+            box-shadow: 0 0 5px rgba(255, 111, 97, 0.5);
+        }
+        .custom-file-upload {
+            border: 2px dashed #555;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #3d3d3d;
+        }
+        .custom-file-upload:hover {
+            border-color: #ff6f61;
+            background-color: #4d4d4d;
+        }
+        .profile-preview {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ff6f61;
+        }
+        .btn-primary {
+            background-color: #ff6f61;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #ff4a3d;
+        }
+        .btn-secondary {
+            background-color: #555;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        .btn-secondary:hover {
+            background-color: #777;
+        }
+        .table {
+            color: #f8f9fa;
+        }
+        .table thead {
+            background-color: #ff6f61;
+            color: #1a1a1a;
+        }
+        .table tbody tr {
+            transition: all 0.3s ease;
+        }
+        .table tbody tr:hover {
+            background-color: #3d3d3d;
+        }
+        .table tbody td {
+            vertical-align: middle;
+        }
+        .table tbody .btn-outline-primary {
+            color: #ff6f61;
+            border-color: #ff6f61;
+        }
+        .table tbody .btn-outline-primary:hover {
+            background-color: #ff6f61;
+            color: #1a1a1a;
+        }
+        .table tbody .btn-outline-danger {
+            color: #ff4a3d;
+            border-color: #ff4a3d;
+        }
+        .table tbody .btn-outline-danger:hover {
+            background-color: #ff4a3d;
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body class="py-5">
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-lg-10">
+            <!-- Form Section -->
+            <div class="form-container">
+                <h2 class="text-center mb-4"><i class="bi bi-people-fill me-2"></i>Customer Management System</h2>
+                <form id="customerForm" class="row g-3">
+                    <div class="col-md-6">
+                        <label for="firstName" class="form-label">First Name</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="form-label">Last Name</label>
+                        <input type="text" class="form-control" id="lastName" required>
+                    </div>
+                    <div class="col-md-8">
+                        <label for="address" class="form-label">Address</label>
+                        <input type="text" class="form-control" id="address">
+                    </div>
+                    <div class="col-md-4">
+                        <label for="age" class="form-label">Age</label>
+                        <input type="number" class="form-control" id="age">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="gender" class="form-label">Gender</label>
+                        <select class="form-select" id="gender">
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input type="text" class="form-control" id="phone">
+                    </div>
+                    <div class="col-12">
+                        <label for="profile-pic" class="form-label">Profile Picture</label>
+                        <div class="custom-file-upload" id="dropZone">
+                            <i class="bi bi-image fs-3 me-2"></i>
+                            <span>Drop your image here or click to browse</span>
+                            <input type="file" id="profile-pic" class="d-none" accept="image/*">
+                        </div>
+                    </div>
+                    <div class="col-12 d-flex gap-2 justify-content-end">
+                        <button type="button" class="btn btn-secondary" onclick="clearForm()">
+                            <i class="bi bi-x-circle me-2"></i>Clear
+                        </button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">
+                            <i class="bi bi-save me-2"></i>Save Customer
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-container">
+                <h3 class="mb-4"><i class="bi bi-table me-2"></i>Customer List</h3>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Profile</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Address</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Phone</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody id="customerTable"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let isEditing = false;
+    let currentEditId = null;
+    let currentImageUrl = '';
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('profile-pic');
+
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#ff6f61';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.style.borderColor = '#555';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.style.borderColor = '#555';
+        const file = e.dataTransfer.files[0];
+        handleFile(file);
+    });
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFile(e.target.files[0]);
+        }
+    });
+
+    function handleFile(file) {
+        if (file && file.type.startsWith('image/')) {
+            currentImageUrl = URL.createObjectURL(file);
+            dropZone.innerHTML = `
+        <i class="bi bi-image fs-3 me-2"></i>
+        <span>Image uploaded! Click to change.</span>
+      `;
+        }
+    }
+
+    document.getElementById('customerForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        saveCustomer();
+    });
+
+    function saveCustomer() {
+        const firstName = document.getElementById('firstName').value;
+        const lastName = document.getElementById('lastName').value;
+        const address = document.getElementById('address').value;
+        const age = document.getElementById('age').value;
+        const gender = document.getElementById('gender').value;
+        const phone = document.getElementById('phone').value;
+
+        if (!firstName || !lastName) {
+            alert('First Name and Last Name are required!');
+            return;
+        }
+
+        if (isEditing) {
+            updateExistingCustomer(firstName, lastName, address, age, gender, phone);
+        } else {
+            addNewCustomer(firstName, lastName, address, age, gender, phone);
+        }
+
+        clearForm();
+    }
+
+    function addNewCustomer(firstName, lastName, address, age, gender, phone) {
+        const table = document.getElementById('customerTable');
+        const row = table.insertRow();
+        row.innerHTML = createTableRow(firstName, lastName, address, age, gender, phone);
+    }
+
+    function updateExistingCustomer(firstName, lastName, address, age, gender, phone) {
+        const row = document.querySelector(`tr[id="${currentEditId}"]`);
+        row.innerHTML = createTableRow(firstName, lastName, address, age, gender, phone);
+        isEditing = false;
+        currentEditId = null;
+        document.getElementById('saveBtn').innerHTML = '<i class="bi bi-save me-2"></i>Save Customer';
+    }
+
+    function createTableRow(firstName, lastName, address, age, gender, phone) {
+        return `
+      <td><img src="${currentImageUrl || 'https://via.placeholder.com/40'}" class="profile-preview"></td>
+      <td>${firstName}</td>
+      <td>${lastName}</td>
+      <td>${address}</td>
+      <td>${age}</td>
+      <td>${gender}</td>
+      <td>${phone}</td>
+      <td>
+        <button class="btn btn-sm btn-outline-primary" onclick="editCustomer(this)">
+          <i class="bi bi-pencil"></i>
+        </button>
+        <button class="btn btn-sm btn-outline-danger" onclick="removeCustomer(this)">
+          <i class="bi bi-trash"></i>
+        </button>
+      </td>
+    `;
+    }
+
+    function editCustomer(button) {
+        const row = button.closest('tr');
+        const cells = row.cells;
+
+        document.getElementById('firstName').value = cells[1].textContent;
+        document.getElementById('lastName').value = cells[2].textContent;
+        document.getElementById('address').value = cells[3].textContent;
+        document.getElementById('age').value = cells[4].textContent;
+        document.getElementById('gender').value = cells[5].textContent;
+        document.getElementById('phone').value = cells[6].textContent;
+
+        currentImageUrl = cells[0].querySelector('img').src;
+        dropZone.innerHTML = `
+      <i class="bi bi-image fs-3 me-2"></i>
+      <span>Image uploaded! Click to change.</span>
+    `;
+
+        isEditing = true;
+        currentEditId = row.getAttribute('id');
+        document.getElementById('saveBtn').innerHTML = '<i class="bi bi-check-circle me-2"></i>Update Customer';
+    }
+
+    function removeCustomer(button) {
+        if (confirm('Are you sure you want to delete this customer?')) {
+            button.closest('tr').remove();
+        }
+    }
+
+    function clearForm() {
+        document.getElementById('customerForm').reset();
+        isEditing = false;
+        currentEditId = null;
+        currentImageUrl = '';
+        dropZone.innerHTML = `
+      <i class="bi bi-image fs-3 me-2"></i>
+      <span>Drop your image here or click to browse</span>
+    `;
+        document.getElementById('saveBtn').innerHTML = '<i class="bi bi-save me-2"></i>Save Customer';
+    }
+
+</script>
+</body>
+</html>

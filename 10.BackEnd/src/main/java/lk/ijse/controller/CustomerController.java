@@ -8,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/customer")
+@CrossOrigin(origins = "*") // Allow all origins
 public class CustomerController {
 
     List<CustomerDTO> customerDTOList = new ArrayList<>();
@@ -30,15 +31,16 @@ public class CustomerController {
     public CustomerDTO updateCustomer(@RequestBody CustomerDTO customerDTO){
         for (CustomerDTO customerDTO1 : customerDTOList) {
             if (customerDTO1.getId().equals(customerDTO.getId())) {
-                customerDTO1.setFirstName(customerDTO.getFirstName());
-                customerDTO1.setLastName(customerDTO.getLastName());
+                customerDTO1.setName(customerDTO.getName());
+                customerDTO1.setAddress(customerDTO.getAddress());
                 customerDTO1.setAge(customerDTO.getAge());
             }
         }
         return customerDTO;
     }
-    @DeleteMapping(path = "delete{id}")
-    public String deleteCustomer( @PathVariable("id") String id){
+    @DeleteMapping(path = "delete", params = "id")
+    public String deleteCustomer( @RequestParam("id") String id){
+        System.out.println(id);
         for (CustomerDTO customerDTO2 : customerDTOList) {
             if (customerDTO2.getId().equals(id)) {
                 customerDTOList.remove(customerDTO2);
