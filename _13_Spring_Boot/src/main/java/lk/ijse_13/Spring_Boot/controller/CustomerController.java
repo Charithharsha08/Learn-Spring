@@ -10,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/customer")
+@CrossOrigin(origins = "*")
 
 public class CustomerController {
     @Autowired
@@ -21,13 +22,13 @@ public class CustomerController {
     }
 
     @GetMapping(path = "getAll")
-    public String getAllCustomers(){
+    public List<Customer> getAllCustomers(){
         List<Customer> customerList = customerService.getAllCustomers();
 
         for (Customer customer : customerList) {
             System.out.println(customer.toString());
         }
-        return "Success";
+        return customerList;
     }
     @DeleteMapping(path = "delete", params = "id")
     public String deleteCustomer( @RequestParam("id") int id) {
