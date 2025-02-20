@@ -14,10 +14,12 @@
         <option value="$PROJECT_DIR$/08.Spring_Web_MVC/pom.xml" />
         <option value="$PROJECT_DIR$/09.Rest_Controller/pom.xml" />
         <option value="$PROJECT_DIR$/10.BackEnd/pom.xml" />
+        <option value="$PROJECT_DIR$/12.Spring_Data_JPA/pom.xml" />
+        <option value="$PROJECT_DIR$/_13_Spring_Boot/pom.xml" />
       </list>
     </option>
   </component>
-  <component name="ProjectRootManager">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="21" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/out" />
   </component>
 </project>

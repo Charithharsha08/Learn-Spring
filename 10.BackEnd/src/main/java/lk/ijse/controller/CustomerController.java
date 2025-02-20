@@ -4,6 +4,7 @@ import lk.ijse.DTO.CustomerDTO;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @RestController
@@ -39,14 +40,16 @@ public class CustomerController {
         return customerDTO;
     }
     @DeleteMapping(path = "delete", params = "id")
-    public String deleteCustomer( @RequestParam("id") String id){
+    public String deleteCustomer( @RequestParam("id") String id) {
         System.out.println(id);
-        for (CustomerDTO customerDTO2 : customerDTOList) {
-            if (customerDTO2.getId().equals(id)) {
-                customerDTOList.remove(customerDTO2);
+        Iterator<CustomerDTO> iterator = customerDTOList.iterator();
+        while (iterator.hasNext()) {
+            CustomerDTO customer = iterator.next();
+            if (customer.getId().equals(id)) {
+                iterator.remove(); // ✅ Correct way to remove an item while iterating
             }
         }
         return id;
-
     }
+
 }
