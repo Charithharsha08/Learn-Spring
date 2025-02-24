@@ -3,6 +3,7 @@ package lk.ijse_13.Spring_Boot.controller;
 import lk.ijse_13.Spring_Boot.DTO.CustomerDTO;
 import lk.ijse_13.Spring_Boot.entity.Customer;
 import lk.ijse_13.Spring_Boot.service.CustomerService;
+import lk.ijse_13.Spring_Boot.util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,31 +15,32 @@ import java.util.List;
 
 public class CustomerController {
     @Autowired
-    private CustomerService customerService;
+    private CustomerService  customerService ;
     @PostMapping(path = "save")
-    public String saveCustomer(@RequestBody CustomerDTO customerDTO){
-       boolean result = customerService.saveCustomer(customerDTO);
-       return result ? "Success" : "Failed";
+    public ResponseUtil saveCustomer(@RequestBody CustomerDTO customerDTO) {
+          customerService.saveCustomer(customerDTO);
+            return new ResponseUtil(200, "Customer Saved", null);
     }
 
     @GetMapping(path = "getAll")
-    public List<Customer> getAllCustomers(){
+    public ResponseUtil getAllCustomers(){
         List<Customer> customerList = customerService.getAllCustomers();
 
         for (Customer customer : customerList) {
             System.out.println(customer.toString());
         }
-        return customerList;
+        return new ResponseUtil(200, "Success", customerList);
     }
+
     @DeleteMapping(path = "delete", params = "id")
-    public String deleteCustomer( @RequestParam("id") int id) {
-        boolean result = customerService.deleteCustomer(id);
-        return result ? "Success" : "Failed";
+    public ResponseUtil deleteCustomer( @RequestParam("id") int id) {
+        customerService.deleteCustomer(id);
+            return new ResponseUtil(200, "Customer Deleted", null);
     }
 
     @PutMapping(path = "update")
-    public String updateCustomer(@RequestBody CustomerDTO customerDTO){
-        boolean result = customerService.updateCustomer(customerDTO);
-        return result ? "Success" : "Failed";
-    }
+    public ResponseUtil updateCustomer(@RequestBody CustomerDTO customerDTO){
+         customerService.updateCustomer(customerDTO);
+            return new ResponseUtil(200, "Customer Updated", null);
+        }
 }

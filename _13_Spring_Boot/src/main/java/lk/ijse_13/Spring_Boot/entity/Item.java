@@ -1,15 +1,21 @@
-package lk.ijse_13.Spring_Boot.DTO;
+package lk.ijse_13.Spring_Boot.entity;
 
-public class ItemDTO {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
+public class Item {
+
+    @Id
     private int id;
     private String name;
     private double price;
     private int qty;
 
-    public ItemDTO() {
+    public Item() {
     }
 
-    public ItemDTO(int id, String name, double price, int qty) {
+    public Item(int id, String name, double price, int qty) {
         this.id = id;
         this.name = name;
         this.price = price;

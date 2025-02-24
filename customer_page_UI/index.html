@@ -209,8 +209,14 @@
         age: age
       }),
       success: function(response) {
-        console.log('Customer added successfully:', response);
-        fetchCustomers();
+        if (response.code === 200){
+          alert("Customer Saved Successfully");
+          fetchCustomers();
+        }else {
+          alert("Customer Not Saved");
+          fetchCustomers();
+
+        }
       },
       error: function(error) {
         console.error('Error adding customer:', error);
@@ -251,7 +257,9 @@
         $('#customerTable').empty(); // Ensure the table is cleared before appending new data
         console.log('Customers fetched successfully:', response);
 
-        response.forEach(customer => {
+
+        response.data.forEach(customer => {
+          console.log(customer)
           $('#customerTable').append(
                   `<tr>
                         <td><img src="${currentImageUrl || 'https://via.placeholder.com/40'}" class="profile-preview"></td>

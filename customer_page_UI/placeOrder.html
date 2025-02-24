@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Place Order</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+  <script src="https://unpkg.com/feather-icons"></script>
+  <style>
+    :root {
+      --teal: #008080;
+      --cyan: #00bcd4;
+      --dark-blue: #003366;
+    }
+
+    body {
+      background-color: #f3f4f6;
+    }
+
+    .btn-teal {
+      background-color: var(--teal);
+      color: white;
+    }
+
+    .btn-teal:hover {
+      background-color: var(--dark-blue);
+    }
+
+    .card {
+      border-radius: 12px;
+      border: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .table th {
+      background: linear-gradient(45deg, var(--teal), var(--cyan));
+      color: white;
+    }
+
+    .total-label {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: var(--dark-blue);
+    }
+  </style>
+</head>
+<body class="py-5">
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-10">
+      <!-- Form Section -->
+      <div class="card shadow-lg p-4 mb-4">
+        <h2 class="text-center text-teal mb-4"><i data-feather="shopping-cart"></i> Place Order</h2>
+        <form id="orderForm" class="row g-3">
+          <div class="col-md-6">
+            <label for="customerSelect" class="form-label fw-bold">Select Customer</label>
+            <select class="form-select" id="customerSelect">
+              <option selected disabled>Choose...</option>
+              <option value="C001">John Doe</option>
+              <option value="C002">Jane Smith</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="itemSelect" class="form-label fw-bold">Select Item</label>
+            <select class="form-select" id="itemSelect" onchange="fillItemDetails()">
+              <option selected disabled>Choose...</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label for="itemId" class="form-label fw-bold">Item ID</label>
+            <input type="text" class="form-control" id="itemId" readonly>
+          </div>
+          <div class="col-md-4">
+            <label for="itemName" class="form-label fw-bold">Item Name</label>
+            <input type="text" class="form-control" id="itemName" readonly>
+          </div>
+          <div class="col-md-4">
+            <label for="itemPrice" class="form-label fw-bold">Unit Price</label>
+            <input type="text" class="form-control" id="itemPrice" readonly>
+          </div>
+          <div class="col-md-4">
+            <label for="itemQty" class="form-label fw-bold">Quantity</label>
+            <input type="number" class="form-control" id="itemQty" min="1" required>
+          </div>
+          <div class="col-12 d-flex gap-2 justify-content-end">
+            <button type="button" class="btn btn-outline-warning" onclick="clearForm()">
+              <i data-feather="refresh-ccw"></i> Clear
+            </button>
+            <button type="button" class="btn btn-teal" onclick="addItemToTable()">
+              <i data-feather="plus-circle"></i> Add to Table
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Table Section -->
+      <div class="card shadow-lg p-4">
+        <h3 class="mb-4"><i data-feather="list"></i> Order Items</h3>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered align-middle">
+            <thead>
+            <tr>
+              <th>Item ID</th>
+              <th>Name</th>
+              <th>Quantity</th>
+              <th>Unit Price</th>
+              <th>Total</th>
+              <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="orderTable"></tbody>
+          </table>
+        </div>
+
+        <!-- Total Price Label -->
+        <div class="d-flex justify-content-between align-items-center mt-3">
+          <span class="total-label">Total Price: $<span id="totalPrice">0.00</span></span>
+          <button class="btn btn-success" onclick="placeOrder()"><i data-feather="shopping-bag"></i> Place Order</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    window.addEventListener('load', () => {
+        fetchCustomers();
+        fetchItems();
+    })
+  function fillItemDetails() {
+    let selectedOption = document.getElementById("itemSelect").selectedOptions[0];
+    document.getElementById("itemId").value = selectedOption.value;
+    document.getElementById("itemName").value = selectedOption.getAttribute("data-name");
+    document.getElementById("itemPrice").value = selectedOption.getAttribute("data-price");
+  }
+
+  function addItemToTable() {
+    let itemId = document.getElementById("itemId").value;
+    let itemName = document.getElementById("itemName").value;
+    let itemPrice = document.getElementById("itemPrice").value;
+    let itemQty = document.getElementById("itemQty").value;
+
+    if (!itemId || !itemQty || itemQty <= 0) {
+      alert("Please select an item and enter a valid quantity.");
+      return;
+    }
+
+    let total = (itemPrice * itemQty).toFixed(2);
+
+    let row = `
+            <tr>
+                <td>${itemId}</td>
+                <td>${itemName}</td>
+                <td>${itemQty}</td>
+                <td>${itemPrice}</td>
+                <td class="item-total">${total}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-danger" onclick="removeItem(this)">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>`;
+
+    document.getElementById("orderTable").insertAdjacentHTML("beforeend", row);
+    updateTotalPrice();
+    clearForm();
+  }
+
+  function removeItem(button) {
+    button.closest("tr").remove();
+    updateTotalPrice();
+  }
+
+  function updateTotalPrice() {
+    let total = 0;
+    document.querySelectorAll(".item-total").forEach(cell => {
+      total += parseFloat(cell.textContent);
+    });
+    document.getElementById("totalPrice").textContent = total.toFixed(2);
+  }
+
+  function placeOrder() {
+    if (document.getElementById("orderTable").children.length === 0) {
+      alert("No items in order.");
+      return;
+    }
+    alert("Order placed successfully!");
+  }
+
+  function clearForm() {
+    document.getElementById("orderForm").reset();
+    document.getElementById("itemId").value = "";
+    document.getElementById("itemName").value = "";
+    document.getElementById("itemPrice").value = "";
+  }
+
+  feather.replace();
+
+  function fetchCustomers() {
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/customer/getAll',
+      method: 'GET',
+      success: function(response) {
+        console.log('Customers fetched successfully:', response);
+        response.data.forEach(customer => {
+          $('#customerSelect').append(
+            `<option value="${customer.id}">${customer.name}</option>`
+          );
+        });
+      },
+      error: function(error) {
+        console.error('Error fetching customers:', error);
+      }
+    });
+  }
+  function fetchItems() {
+    $.ajax({
+      url: 'http://localhost:8080/api/v1/items/getAll',
+      method: 'GET',
+      success: function(response) {
+        console.log('Items fetched successfully:', response);
+        response.data.forEach(item => {
+          console.log(item);
+          $('#itemSelect').append(
+            `<option value="${item.id}" data-name="${item.name}" data-price="${item.price}">${item.name}</option>`
+          );
+        });
+      },
+      error: function(error) {
+        console.error('Error fetching items:', error);
+      }
+    });
+  }
+</script>
+</body>
+</html>
