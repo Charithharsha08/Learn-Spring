@@ -1,33 +1,40 @@
 package lk.ijse_13.Spring_Boot.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Item {
 
     @Id
-    private int id;
+    private int itemId;
     private String name;
     private double price;
     private int qty;
-
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "item")
+    private List<OrderDetail> orderDetails
+            = new ArrayList<>();
     public Item() {
     }
 
-    public Item(int id, String name, double price, int qty) {
-        this.id = id;
+    public Item(int itemId, String name, double price, int qty, List<OrderDetail> orderDetails) {
+        this.itemId = itemId;
         this.name = name;
         this.price = price;
         this.qty = qty;
+        this.orderDetails = orderDetails;
     }
 
-    public int getId() {
-        return id;
+    public int getItemId() {
+        return itemId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
@@ -52,5 +59,13 @@ public class Item {
 
     public void setQty(int qty) {
         this.qty = qty;
+    }
+
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

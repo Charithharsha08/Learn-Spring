@@ -1,32 +1,42 @@
 package lk.ijse_13.Spring_Boot.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Customer {
     @Id
-    private int id;
+    private int customerId;
     private String name;
     private String address;
     private int age;
 
+    @OneToMany(cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            mappedBy = "customer")
+    private List<OrderDetail> orderDetails
+            = new ArrayList<>();
+
+
     public Customer() {
     }
 
-    public Customer(int id, String name, String address, int age) {
-        this.id = id;
+    public Customer(int customerId, String name, String address, int age, List<OrderDetail> orderDetails) {
+        this.customerId = customerId;
         this.name = name;
         this.address = address;
         this.age = age;
+        this.orderDetails = orderDetails;
     }
 
-    public int getId() {
-        return id;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {
@@ -53,13 +63,11 @@ public class Customer {
         this.age = age;
     }
 
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", age=" + age +
-                '}';
+    public List<OrderDetail> getOrderDetails() {
+        return orderDetails;
+    }
+
+    public void setOrderDetails(List<OrderDetail> orderDetails) {
+        this.orderDetails = orderDetails;
     }
 }

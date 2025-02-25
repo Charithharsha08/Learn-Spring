@@ -222,7 +222,7 @@
       method: 'GET',
       success: function(response) {
         console.log('Items fetched successfully:', response);
-        response.data.forEach(item => {
+        response.forEach(item => {
           console.log(item);
           $('#itemSelect').append(
             `<option value="${item.id}" data-name="${item.name}" data-price="${item.price}">${item.name}</option>`
