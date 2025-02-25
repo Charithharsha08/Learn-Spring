@@ -32,7 +32,8 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
     @Transactional
     @Override
     public void placeOrder(PlaceOrderDTO placeOrderDTO) {
-        orderDetailRepo.save(new OrderDetail(placeOrderDTO.getOid(),placeOrderDTO.getQty(),placeOrderDTO.getTotal(),modelMapper.map(placeOrderDTO.getCustomerDTO(), Customer.class),modelMapper.map(placeOrderDTO.getItemDTO(), Item.class)));
+        System.out.println(placeOrderDTO.getCustomerDTO().getId());
+       orderDetailRepo.save(new OrderDetail(placeOrderDTO.getOid(),placeOrderDTO.getQty(),placeOrderDTO.getTotal(),modelMapper.map(placeOrderDTO.getCustomerDTO(), Customer.class),modelMapper.map(placeOrderDTO.getItemDTO(), Item.class)));
 
         orderRepo.save(new Orders(placeOrderDTO.getOid(),new Date(System.currentTimeMillis()),placeOrderDTO.getTotal()));
 

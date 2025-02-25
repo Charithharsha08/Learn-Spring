@@ -16,11 +16,11 @@ public class OrderDetail {
     private int qty;
 
     @ManyToOne
-    @JoinColumn(name = "customerId", insertable = false, updatable = false)
+    @JoinColumn(name = "customerId")
     private Customer customer;
 
     @ManyToOne
-    @JoinColumn(name = "itemId", insertable = false, updatable = false)
+    @JoinColumn(name = "itemId")
     private Item item;
 
     public OrderDetail() {
