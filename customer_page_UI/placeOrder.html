@@ -61,8 +61,6 @@
             <label for="customerSelect" class="form-label fw-bold">Select Customer</label>
             <select class="form-select" id="customerSelect">
               <option selected disabled>Choose...</option>
-              <option value="C001">John Doe</option>
-              <option value="C002">Jane Smith</option>
             </select>
           </div>
           <div class="col-md-6">
@@ -120,7 +118,7 @@
         <!-- Total Price Label -->
         <div class="d-flex justify-content-between align-items-center mt-3">
           <span class="total-label">Total Price: $<span id="totalPrice">0.00</span></span>
-          <button class="btn btn-success" onclick="placeOrder()"><i data-feather="shopping-bag"></i> Place Order</button>
+          <button type="button" class="btn btn-success" id="placeOrderButton"><i data-feather="shopping-bag"></i> Place Order</button>
         </div>
       </div>
     </div>
@@ -134,7 +132,8 @@
         fetchCustomers();
         fetchItems();
     })
-  function fillItemDetails() {
+
+    function fillItemDetails() {
     let selectedOption = document.getElementById("itemSelect").selectedOptions[0];
     document.getElementById("itemId").value = selectedOption.value;
     document.getElementById("itemName").value = selectedOption.getAttribute("data-name");
@@ -186,43 +185,85 @@
     document.getElementById("totalPrice").textContent = total.toFixed(2);
   }
 
-  function placeOrder() {
-    if (document.getElementById("orderTable").children.length === 0) {
-      alert("No items in order.");
-      return;
-    }
-    $.ajax({
-        url: 'http://localhost:8080/api/v1/placeorder',
-        method: 'POST',
-        contentType: 'application/json',
-        data: JSON.stringify({
-          oid: document.getElementById("orderId").value,
-          customerDTO: {
-            id: document.getElementById("customerSelect").value,
-            name: document.getElementById("customerSelect").selectedOptions[0].textContent,
-            address: document.getElementById("address").value,
-            age: document.getElementById("age").value,
-          },
-          itemDTO: {
-            id: document.getElementById("itemId").value,
-            name: document.getElementById("itemName").value,
-            price: document.getElementById("itemPrice").value,
-            qty: document.getElementById("itemQty").value
-          },
-          qty: document.getElementById("itemQty").value,
-            total: document.getElementById("totalPrice").textContent
+    $("#placeOrderButton").click(function (event) {
+      event.preventDefault();
+      console.log("place payment button clicked");
+      placeOrder();
+    });
 
-        }),
-        success: function(response) {
+    let selectedCustomer = {};
+    let selectedItem = {};
 
+    $(document).ready(function () {
+      // Customer selection
+      $("#customerSelect").change(function () {
+        let selectedOption = $(this).find(":selected");
+
+        selectedCustomer = {
+          id: selectedOption.val(),
+          name: selectedOption.data("name"),
+          address: selectedOption.data("address"),
+          age: selectedOption.data("age"),
+        };
+
+        console.log("Selected Customer:", selectedCustomer);
+      });
+
+      // Item selection
+      $("#itemSelect").change(function () {
+        let selectedOption = $(this).find(":selected");
+
+        selectedItem = {
+          id: selectedOption.val(),
+          name: selectedOption.data("name"),
+          price: selectedOption.data("price"),
+        };
+
+        console.log("Selected Item:", selectedItem);
+      });
+    });
+
+    function placeOrder() {
+      if (!selectedCustomer.id || !selectedItem.id) {
+        alert("Please select a customer and an item.");
+        return;
+      }
+
+      let orderId = document.getElementById("orderId").value;
+      let itemQty = document.getElementById("itemQty").value;
+      let totalPrice = document.getElementById("totalPrice").textContent;
+      console.log("Order ID:", orderId , "Item Quantity:", itemQty, "Total Price:", totalPrice);
+
+      /*let orderData = {
+        oid: orderId,
+        customerDTO: selectedCustomer,
+        itemDTO: {
+          ...selectedItem,
+          qty:itemQty
         },
-        error: function(error) {
+        qty: itemQty,
+        total: totalPrice,
+      };
 
-        }
-    })
-  }
+      console.log("Sending order data:", orderData); // Debugging output
 
-  function clearForm() {
+      $.ajax({
+        url: "http://localhost:8080/api/v1/placeorder/save",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(orderData),
+        success: function (response) {
+          alert("Order placed successfully!");
+          console.log(response);
+        },
+        error: function (error) {
+          alert("Failed to place order.");
+          console.error(error);
+        },
+      });*/
+    }
+
+    function clearForm() {
     document.getElementById("orderForm").reset();
     document.getElementById("itemId").value = "";
     document.getElementById("itemName").value = "";
@@ -231,24 +272,27 @@
 
   feather.replace();
 
-  function fetchCustomers() {
-    $.ajax({
-      url: 'http://localhost:8080/api/v1/customer/getAll',
-      method: 'GET',
-      success: function(response) {
-        console.log('Customers fetched successfully:', response);
-        response.data.forEach(customer => {
-          $('#customerSelect').append(
-            `<option value="${customer.id}">${customer.name}</option>`
-          );
-        });
-      },
-      error: function(error) {
-        console.error('Error fetching customers:', error);
-      }
-    });
-  }
-  function fetchItems() {
+    function fetchCustomers() {
+      $.ajax({
+        url: 'http://localhost:8080/api/v1/customer/getAll',
+        method: 'GET',
+        success: function(response) {
+          console.log('Customers fetched successfully:', response);
+          response.data.forEach(customer => {
+            $('#customerSelect').append(
+                    `<option value="${customer.customerId}" data-name="${customer.name}" data-address="${customer.address}" data-age="${customer.age}">
+            ${customer.name}
+          </option>`
+            );
+          });
+        },
+        error: function(error) {
+          console.error('Error fetching customers:', error);
+        }
+      });
+    }
+
+    function fetchItems() {
     $.ajax({
       url: 'http://localhost:8080/api/v1/items/getAll',
       method: 'GET',
