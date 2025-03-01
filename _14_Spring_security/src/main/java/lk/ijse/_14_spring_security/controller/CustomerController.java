@@ -3,10 +3,7 @@ package lk.ijse._14_spring_security.controller;
 import jakarta.servlet.http.HttpServletRequest;
 import lk.ijse._14_spring_security.Customer;
 import org.springframework.security.web.csrf.CsrfToken;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpRequest;
 import java.util.ArrayList;
@@ -27,7 +24,9 @@ public class CustomerController {
     }
 
     @PostMapping
-    public String saveCustomer(Customer customer){
+    public String saveCustomer(@RequestBody Customer customer){
+        System.out.println(customer.getId()+" "+customer.getName());
+
         customers.add(customer);
         return "Customer Saved";
     }

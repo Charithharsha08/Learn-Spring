@@ -16,8 +16,8 @@ public class OrderDetail {
     private int qty;
 
     @ManyToOne
-    @JoinColumn(name = "customerId")
-    private Customer customer;
+    @JoinColumn(name = "orderId")
+    private Orders orders;
 
     @ManyToOne
     @JoinColumn(name = "itemId")
@@ -26,10 +26,10 @@ public class OrderDetail {
     public OrderDetail() {
     }
 
-    public OrderDetail(int orderDetailId, int qty, double unitPrice, Customer customer, Item item) {
+    public OrderDetail(int orderDetailId, int qty, Orders orders, Item item) {
         this.orderDetailId = orderDetailId;
         this.qty = qty;
-        this.customer = customer;
+        this.orders = orders;
         this.item = item;
     }
 
@@ -49,13 +49,12 @@ public class OrderDetail {
         this.qty = qty;
     }
 
-
-    public Customer getCustomer() {
-        return customer;
+    public Orders getOrders() {
+        return orders;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setOrders(Orders orders) {
+        this.orders = orders;
     }
 
     public Item getItem() {

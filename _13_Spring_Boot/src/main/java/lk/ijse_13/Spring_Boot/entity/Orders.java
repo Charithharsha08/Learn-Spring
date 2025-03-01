@@ -4,46 +4,24 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Orders  {
     @Id
-    private int id;
+    private int orderId;
 
     private Date date;
 
     private double total;
 
-    public Orders() {
-    }
+    @ManyToOne
+    @JoinColumn(name = "customerId")
+    private Customer customer;
 
-    public Orders(int id, Date date, double total) {
-        this.id = id;
-        this.date = date;
-        this.total = total;
-    }
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "orders")
+    private List<OrderDetail> orderDetails = new ArrayList<>();
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
 }

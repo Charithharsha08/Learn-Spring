@@ -14,20 +14,21 @@ public class Item {
     private String name;
     private double price;
     private int qty;
+
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "item")
     private List<OrderDetail> orderDetails
             = new ArrayList<>();
+
     public Item() {
     }
 
-    public Item(int itemId, String name, double price, int qty, List<OrderDetail> orderDetails) {
+    public Item(int itemId, String name, double price, int qty) {
         this.itemId = itemId;
         this.name = name;
         this.price = price;
         this.qty = qty;
-        this.orderDetails = orderDetails;
     }
 
     public int getItemId() {

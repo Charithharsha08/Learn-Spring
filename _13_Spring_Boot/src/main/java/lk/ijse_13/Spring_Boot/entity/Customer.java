@@ -17,19 +17,17 @@ public class Customer {
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "customer")
-    private List<OrderDetail> orderDetails
+    private List<Orders> orders
             = new ArrayList<>();
-
 
     public Customer() {
     }
 
-    public Customer(int customerId, String name, String address, int age, List<OrderDetail> orderDetails) {
+    public Customer(int customerId, String name, String address, int age) {
         this.customerId = customerId;
         this.name = name;
         this.address = address;
         this.age = age;
-        this.orderDetails = orderDetails;
     }
 
     public int getCustomerId() {
@@ -64,11 +62,11 @@ public class Customer {
         this.age = age;
     }
 
-    public List<OrderDetail> getOrderDetails() {
-        return orderDetails;
+    public List<Orders> getOrders() {
+        return orders;
     }
 
-    public void setOrderDetails(List<OrderDetail> orderDetails) {
-        this.orderDetails = orderDetails;
+    public void setOrders(List<Orders> orders) {
+        this.orders = orders;
     }
 }
