@@ -1,5 +1,6 @@
 package lk.ijse_13.Spring_Boot.service;
 
+import lk.ijse_13.Spring_Boot.DTO.ItemDTO;
 import lk.ijse_13.Spring_Boot.DTO.PlaceOrderDTO;
 
 import lk.ijse_13.Spring_Boot.entity.Customer;
@@ -16,8 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Date;
 
-@Service
 
+@Service
 public class PlaceOrderServiceImpl implements PlaceOrderService {
 
     ModelMapper modelMapper = new ModelMapper();
@@ -29,18 +30,36 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
     @Autowired
     private ItemRepo itemRepo;
 
-   // @Transactional
+    @Transactional
     @Override
     public void placeOrder(PlaceOrderDTO placeOrderDTO) {
-       /* System.out.println(placeOrderDTO.getCustomerDTO().getId());
-       orderDetailRepo.save(new OrderDetail(placeOrderDTO.getOid(),placeOrderDTO.getQty(),placeOrderDTO.getTotal(),modelMapper.map(placeOrderDTO.getCustomerDTO(), Customer.class),modelMapper.map(placeOrderDTO.getItemDTO(), Item.class)));
 
-        orderRepo.save(new Orders(placeOrderDTO.getOid(),new Date(System.currentTimeMillis()),placeOrderDTO.getTotal()));
+        double total = 0.0;
+        for (ItemDTO itemDTO : placeOrderDTO.getItemDTOS()) {
+            total += itemDTO.getQty() * itemDTO.getPrice();
+        }
+        //save data to order table
+        Orders orders = new Orders();
+        orders.setDate(new Date(System.currentTimeMillis()));
+        orders.setTotal(total);
+        orders.setCustomer(modelMapper.map(placeOrderDTO.getCustomerDTO(), Customer.class));
+        orderRepo.save(orders);
 
-        Item item = itemRepo.findById(placeOrderDTO.getItemDTO().getId()).get();
-        item.setQty(item.getQty()-placeOrderDTO.getQty());
-        itemRepo.save(item);*/
-
+        //save data to order detail table
+        for (ItemDTO itemDTO : placeOrderDTO.getItemDTOS()) {
+            OrderDetail orderDetail = new OrderDetail();
+            orderDetail.setOrders(orders);
+            orderDetail.setItem(modelMapper.map(itemDTO, Item.class));
+            orderDetail.setQty(itemDTO.getQty());
+            orderDetailRepo.save(orderDetail);
+        }
+        //update qty in item table
+        for (ItemDTO itemDTO : placeOrderDTO.getItemDTOS()) {
+            Item item = itemRepo.findById(itemDTO.getItemId()).get();
+            item.setQty(item.getQty() - itemDTO.getQty());
+            itemRepo.save(item);
+        }
     }
+
 }
 

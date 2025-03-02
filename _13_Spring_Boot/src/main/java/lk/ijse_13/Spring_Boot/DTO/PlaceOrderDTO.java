@@ -1,37 +1,17 @@
 package lk.ijse_13.Spring_Boot.DTO;
 
+import java.util.List;
+
 public class PlaceOrderDTO {
-    private int oid;
     CustomerDTO customerDTO;
-    ItemDTO itemDTO;
-    private int qty;
-    private double total;
+    List<ItemDTO> itemDTOS;
 
     public PlaceOrderDTO() {
     }
 
-    public PlaceOrderDTO(int oid, CustomerDTO customerDTO, ItemDTO itemDTO, int qty, double total) {
-        this.oid = oid;
+    public PlaceOrderDTO(CustomerDTO customerDTO, List<ItemDTO> itemDTOS, double total) {
         this.customerDTO = customerDTO;
-        this.itemDTO = itemDTO;
-        this.qty = qty;
-        this.total = total;
-    }
-
-    public double getTotal() {
-        return total;
-    }
-
-    public void setTotal(double total) {
-        this.total = total;
-    }
-
-    public int getOid() {
-        return oid;
-    }
-
-    public void setOid(int oid) {
-        this.oid = oid;
+        this.itemDTOS = itemDTOS;
     }
 
     public CustomerDTO getCustomerDTO() {
@@ -42,19 +22,19 @@ public class PlaceOrderDTO {
         this.customerDTO = customerDTO;
     }
 
-    public ItemDTO getItemDTO() {
-        return itemDTO;
+    public List<ItemDTO> getItemDTOS() {
+        return itemDTOS;
     }
 
-    public void setItemDTO(ItemDTO itemDTO) {
-        this.itemDTO = itemDTO;
+    public void setItemDTOS(List<ItemDTO> itemDTOS) {
+        this.itemDTOS = itemDTOS;
     }
 
-    public int getQty() {
-        return qty;
-    }
-
-    public void setQty(int qty) {
-        this.qty = qty;
+    @Override
+    public String toString() {
+        return "PlaceOrderDTO{" +
+                "customerDTO=" + customerDTO +
+                ", itemDTOS=" + itemDTOS +
+                '}';
     }
 }

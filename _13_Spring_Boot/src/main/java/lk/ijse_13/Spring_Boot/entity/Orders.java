@@ -10,6 +10,7 @@ import java.util.List;
 @Entity
 public class Orders  {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderId;
 
     private Date date;

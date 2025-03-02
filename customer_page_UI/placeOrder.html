@@ -140,111 +140,126 @@
     document.getElementById("itemPrice").value = selectedOption.getAttribute("data-price");
   }
 
-  function addItemToTable() {
-    let itemId = document.getElementById("itemId").value;
-    let itemName = document.getElementById("itemName").value;
-    let itemPrice = document.getElementById("itemPrice").value;
-    let itemQty = document.getElementById("itemQty").value;
+    let cartItems = []; // Array to store added items
 
-    if (!itemId || !itemQty || itemQty <= 0) {
-      alert("Please select an item and enter a valid quantity.");
-      return;
+    function addItemToTable() {
+      let itemId = document.getElementById("itemId").value;
+      let itemName = document.getElementById("itemName").value;
+      let itemPrice = parseFloat(document.getElementById("itemPrice").value);
+      let itemQty = parseInt(document.getElementById("itemQty").value);
+
+      if (!itemId || !itemName || isNaN(itemPrice) || isNaN(itemQty) || itemQty <= 0) {
+        alert("Please select a valid item and quantity.");
+        return;
+      }
+
+      // Check if item already exists in the cartItems array
+      let existingItem = cartItems.find(item => item.itemId === itemId);
+
+      if (existingItem) {
+        // Update quantity and total price if item already exists
+        existingItem.quantity += itemQty;
+        existingItem.total = existingItem.quantity * existingItem.price;
+      } else {
+        // Add new item to cart array
+        cartItems.push({
+          itemId: itemId,
+          name: itemName,
+          price: itemPrice,
+          qty: itemQty,
+          total: itemQty * itemPrice
+        });
+      }
+
+      // Refresh cart table and total price
+      updateCartTable();
+      updateTotalPrice();
+      clearForm();
     }
 
-    let total = (itemPrice * itemQty).toFixed(2);
 
-    let row = `
+    function updateCartTable() {
+      let tableBody = document.getElementById("orderTable");
+      tableBody.innerHTML = ""; // Clear existing rows
+
+      cartItems.forEach(item => {
+        let row = `
             <tr>
-                <td>${itemId}</td>
-                <td>${itemName}</td>
-                <td>${itemQty}</td>
-                <td>${itemPrice}</td>
-                <td class="item-total">${total}</td>
+                <td>${item.itemId}</td>
+                <td>${item.name}</td>
+                <td>${item.qty}</td>
+                <td>${item.price.toFixed(2)}</td>
+                <td class="item-total">${item.total.toFixed(2)}</td>
                 <td>
-                    <button class="btn btn-sm btn-outline-danger" onclick="removeItem(this)">
+                    <button class="btn btn-sm btn-outline-danger" onclick="removeItem('${item.itemId}')">
                         <i class="bi bi-trash"></i>
                     </button>
                 </td>
             </tr>`;
+        tableBody.insertAdjacentHTML("beforeend", row);
+      });
+    }
 
-    document.getElementById("orderTable").insertAdjacentHTML("beforeend", row);
-    updateTotalPrice();
-    clearForm();
-  }
+    function removeItem(itemId) {
+      cartItems = cartItems.filter(item => item.itemId !== itemId);
+      updateCartTable();
+      updateTotalPrice();
+    }
 
-  function removeItem(button) {
-    button.closest("tr").remove();
-    updateTotalPrice();
-  }
 
-  function updateTotalPrice() {
-    let total = 0;
-    document.querySelectorAll(".item-total").forEach(cell => {
-      total += parseFloat(cell.textContent);
-    });
-    document.getElementById("totalPrice").textContent = total.toFixed(2);
-  }
+    function updateTotalPrice() {
+      let total = cartItems.reduce((sum, item) => sum + item.total, 0);
+      document.getElementById("totalPrice").textContent = total.toFixed(2);
+    }
 
-    $("#placeOrderButton").click(function (event) {
-      event.preventDefault();
-      console.log("place payment button clicked");
+
+    // Function to clear form fields
+    function clearForm() {
+      document.getElementById("itemSelect").selectedIndex = 0; // Reset the dropdown to default option
+      document.getElementById("itemId").value = "";
+      document.getElementById("itemName").value = "";
+      document.getElementById("itemPrice").value = "";
+        document.getElementById("itemQty").value = "";
+    }
+
+    $('#placeOrderButton').click(function() {
+      console.log('Place Order button clicked');
       placeOrder();
     });
 
-    let selectedCustomer = {};
-    let selectedItem = {};
-
-    $(document).ready(function () {
-      // Customer selection
-      $("#customerSelect").change(function () {
-        let selectedOption = $(this).find(":selected");
-
-        selectedCustomer = {
-          customerId: selectedOption.val(),
-          name: selectedOption.data("name"),
-          address: selectedOption.data("address"),
-          age: selectedOption.data("age"),
-        };
-
-        console.log("Selected Customer:", selectedCustomer);
-      });
-
-      // Item selection
-      $("#itemSelect").change(function () {
-        let selectedOption = $(this).find(":selected");
-
-        selectedItem = {
-          itemId: selectedOption.val(),
-          name: selectedOption.data("name"),
-          price: selectedOption.data("price"),
-        };
-
-        console.log("Selected Item:", selectedItem);
-      });
-    });
-
     function placeOrder() {
-      if (!selectedCustomer.id || !selectedItem.id) {
-        alert("Please select a customer and an item.");
+      if (cartItems.length === 0) {
+        alert("Please add items to the cart before placing the order.");
         return;
       }
+      // Print cartItems in the console before placing the order
+      console.log("Cart Items before placing order:", cartItems);
 
-      let orderId = document.getElementById("orderId").value;
-      let itemQty = document.getElementById("itemQty").value;
-      let totalPrice = document.getElementById("totalPrice").textContent;
-      console.log("Order ID:", orderId , "Item Quantity:", itemQty, "Total Price:", totalPrice);
-
+      $.ajax({
+        url: 'http://localhost:8080/api/v1/placeorder/save',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+         customerDTO:selectedCustomer,
+          itemDTOS:cartItems
+        }),
+        success: function(response) {
+          if (response.code === 201) {
+            alert("Order placed successfully!");
+            updateCartTable();
+            updateTotalPrice();
+            clearForm();
+            cartItems = []; // Clear cart after placing order
+          }
+                 },
+        error: function(error) {
+          console.error('Error placing order:', error);
+          alert('Error placing order. Please try again later.');
+        }
+        });
 
     }
 
-    function clearForm() {
-    document.getElementById("orderForm").reset();
-    document.getElementById("itemId").value = "";
-    document.getElementById("itemName").value = "";
-    document.getElementById("itemPrice").value = "";
-  }
-
-  feather.replace();
 
     function fetchCustomers() {
       $.ajax({
@@ -282,6 +297,23 @@
       }
     });
   }
+
+    $(document).ready(function () {
+      // Customer selection
+      $("#customerSelect").change(function () {
+        let selectedOption = $(this).find(":selected");
+
+        selectedCustomer = {
+          customerId: selectedOption.val(),
+          name: selectedOption.data("name"),
+          address: selectedOption.data("address"),
+          age: selectedOption.data("age"),
+        };
+
+        console.log("Selected Customer:", selectedCustomer);
+      });
+    });
+
 </script>
 </body>
 </html>

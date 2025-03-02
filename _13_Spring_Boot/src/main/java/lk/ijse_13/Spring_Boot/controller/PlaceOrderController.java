@@ -1,5 +1,6 @@
 package lk.ijse_13.Spring_Boot.controller;
 
+import lk.ijse_13.Spring_Boot.DTO.ItemDTO;
 import lk.ijse_13.Spring_Boot.DTO.PlaceOrderDTO;
 import lk.ijse_13.Spring_Boot.service.PlaceOrderService;
 import lk.ijse_13.Spring_Boot.util.ResponseUtil;
@@ -18,8 +19,11 @@ public class PlaceOrderController {
 
 @PostMapping(path = "save")
 public ResponseUtil savePlaceOrder(@RequestBody PlaceOrderDTO placeOrderDTO) {
+  for (ItemDTO itemDTO : placeOrderDTO.getItemDTOS()) {
+      System.out.println(itemDTO.toString());
+  }
     placeOrderService.placeOrder(placeOrderDTO);
-    return new  ResponseUtil(200, "PlaceOrder Saved", null);
+    return new  ResponseUtil(201, "PlaceOrder Saved", null);
 }
 
 }

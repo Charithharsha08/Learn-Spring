@@ -11,6 +11,7 @@ public class OrderDetail {
 */
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int orderDetailId;
 
     private int qty;
