@@ -246,10 +246,12 @@
         success: function(response) {
           if (response.code === 201) {
             alert("Order placed successfully!");
-            updateCartTable();
-            updateTotalPrice();
-            clearForm();
-            cartItems = []; // Clear cart after placing order
+            // Reset all fields and table
+            cartItems = [];  // Clear cart
+            updateCartTable();  // Refresh table
+            updateTotalPrice(); // Reset total price
+            clearForm(); // Clear form fields
+            $('#customerSelect').prop('selectedIndex', 0); // Reset customer dropdown
           }
                  },
         error: function(error) {
