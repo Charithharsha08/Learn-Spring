@@ -29,7 +29,7 @@ public class PlaceOrderServiceImpl implements PlaceOrderService {
     @Autowired
     private ItemRepo itemRepo;
 
-    @Transactional
+   // @Transactional
     @Override
     public void placeOrder(PlaceOrderDTO placeOrderDTO) {
        /* System.out.println(placeOrderDTO.getCustomerDTO().getId());

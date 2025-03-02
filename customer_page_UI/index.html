@@ -178,32 +178,33 @@
 
   function saveCustomer() {
 
-    const id = document.getElementById('id').value;
+    const customerId = document.getElementById('id').value;
     const name = document.getElementById('name').value;
     const address = document.getElementById('address').value;
     const age = document.getElementById('age').value;
 
-    if (!id || !name) {
-      alert('ID and Name are required!');
+    if (!age || !name || !address) {
+      alert('All Fields are required!');
       return;
     }
 
     if (isEditing) {
-      updateExistingCustomer(id, name, address, age);
+      updateExistingCustomer(customerId, name, address, age);
     } else {
-      addNewCustomer(id, name, address, age);
+      addNewCustomer(customerId, name, address, age);
     }
 
     clearForm();
   }
 
-  function addNewCustomer(id, name, address, age) {
+  function addNewCustomer(customerId, name, address, age) {
+    console.log("clicked save button"+id, name, address, age);
     $.ajax({
       url: 'http://localhost:8080/api/v1/customer/save',
       method: 'POST',
       contentType: "application/json",
       data: JSON.stringify({
-        id: id,
+        customerId: customerId,
         name: name,
         address: address,
         age: age
@@ -224,13 +225,13 @@
     });
   }
 
-  function updateExistingCustomer(id, name, address, age) {
+  function updateExistingCustomer(customerId, name, address, age) {
     $.ajax({
       url: 'http://localhost:8080/api/v1/customer/update',
       method: 'PUT',
       contentType: "application/json",
       data: JSON.stringify({
-        id: id,
+        customerId: customerId,
         name: name,
         address: address,
         age: age
@@ -259,19 +260,18 @@
 
 
         response.data.forEach(customer => {
-          console.log(customer)
           $('#customerTable').append(
                   `<tr>
                         <td><img src="${currentImageUrl || 'https://via.placeholder.com/40'}" class="profile-preview"></td>
-                        <td>${customer.id}</td>
+                        <td>${customer.customerId}</td>
                         <td>${customer.name}</td>
                         <td>${customer.address}</td>
                         <td>${customer.age}</td>
                         <td>
-                            <button class="btn btn-sm btn-outline-primary" onclick="editCustomer('${customer.id}', '${customer.name}', '${customer.address}', '${customer.age}')">
+                            <button class="btn btn-sm btn-outline-primary" onclick="editCustomer('${customer.customerId}', '${customer.name}', '${customer.address}', '${customer.age}')">
                                 <i class="bi bi-pencil"></i>
                             </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="removeCustomer('${customer.id}')">
+                            <button class="btn btn-sm btn-outline-danger" onclick="removeCustomer('${customer.customerId}')">
                                 <i class="bi bi-trash"></i>
                             </button>
                         </td>

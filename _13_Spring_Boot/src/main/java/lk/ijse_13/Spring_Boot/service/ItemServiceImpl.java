@@ -18,22 +18,32 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ModelMapper modelMapper;
     @Override
-    public boolean saveItem(ItemDTO itemDTO){
+    public void saveItem(ItemDTO itemDTO){
+        if (itemRepo.existsById(itemDTO.getItemId())) {
+            throw new RuntimeException("Item already exists");
+        }
         itemRepo.save(modelMapper.map(itemDTO , Item.class));
-        return true;
     }
     @Override
-    public boolean deleteItem(int id){
+    public void deleteItem(int id){
+        if (!itemRepo.existsById(id)) {
+            throw new RuntimeException("Item does not exist");
+        }
         itemRepo.deleteById(id);
-        return true;
     }
     @Override
-    public boolean updateItem(ItemDTO itemDTO){
-        itemRepo.save(modelMapper.map(itemDTO , Item.class));
-        return true;
+    public void updateItem(ItemDTO itemDTO){
+        if (itemRepo.existsById(itemDTO.getItemId())) {
+            itemRepo.save(modelMapper.map(itemDTO, Item.class));
+            return;
+        }
+        throw new RuntimeException("Item not found");
     }
     @Override
     public List<ItemDTO> getAllItems(){
+        if (itemRepo.findAll().isEmpty()) {
+            throw new RuntimeException("No Items found");
+        }
 return modelMapper.map(
         itemRepo.findAll(),
         new TypeToken<List<ItemDTO>>(){}.getType()

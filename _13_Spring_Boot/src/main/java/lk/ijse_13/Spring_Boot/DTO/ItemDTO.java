@@ -1,7 +1,7 @@
 package lk.ijse_13.Spring_Boot.DTO;
 
 public class ItemDTO {
-    private int id;
+    private int itemId;
     private String name;
     private double price;
     private int qty;
@@ -9,19 +9,19 @@ public class ItemDTO {
     public ItemDTO() {
     }
 
-    public ItemDTO(int id, String name, double price, int qty) {
-        this.id = id;
+    public ItemDTO(int itemId, String name, double price, int qty) {
+        this.itemId = itemId;
         this.name = name;
         this.price = price;
         this.qty = qty;
     }
 
-    public int getId() {
-        return id;
+    public int getItemId() {
+        return itemId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
     }
 
     public String getName() {
@@ -47,4 +47,6 @@ public class ItemDTO {
     public void setQty(int qty) {
         this.qty = qty;
     }
+
+
 }

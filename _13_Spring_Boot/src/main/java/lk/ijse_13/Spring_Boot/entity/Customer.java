@@ -8,7 +8,6 @@ import java.util.List;
 @Entity
 public class Customer {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int customerId;
     private String name;
     private String address;
@@ -23,7 +22,15 @@ public class Customer {
     public Customer() {
     }
 
-    public Customer(int customerId, String name, String address, int age) {
+    public Customer(int customerId, String name, String address, int age, List<Orders> orders) {
+        this.customerId = customerId;
+        this.name = name;
+        this.address = address;
+        this.age = age;
+        this.orders = orders;
+    }
+
+    public Customer(int customerId, String name, String address, int age ) {
         this.customerId = customerId;
         this.name = name;
         this.address = address;
@@ -68,5 +75,16 @@ public class Customer {
 
     public void setOrders(List<Orders> orders) {
         this.orders = orders;
+    }
+
+    @Override
+    public String toString() {
+        return "Customer{" +
+                "customerId=" + customerId +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", age=" + age +
+                ", orders=" + orders +
+                '}';
     }
 }

@@ -25,10 +25,6 @@ public class CustomerController {
     @GetMapping(path = "getAll")
     public ResponseUtil getAllCustomers(){
         List<Customer> customerList = customerService.getAllCustomers();
-
-        for (Customer customer : customerList) {
-            System.out.println(customer.toString());
-        }
         return new ResponseUtil(200, "Success", customerList);
     }
 
@@ -40,6 +36,7 @@ public class CustomerController {
 
     @PutMapping(path = "update")
     public ResponseUtil updateCustomer(@RequestBody CustomerDTO customerDTO){
+        System.out.println("Customer Controller" + customerDTO.getCustomerId());
          customerService.updateCustomer(customerDTO);
             return new ResponseUtil(200, "Customer Updated", null);
         }

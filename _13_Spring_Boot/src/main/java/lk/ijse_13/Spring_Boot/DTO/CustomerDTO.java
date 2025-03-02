@@ -2,7 +2,7 @@ package lk.ijse_13.Spring_Boot.DTO;
 
 
 public class CustomerDTO {
-    private int id;
+    private int customerId;
     private String name;
     private String address;
     private int age;
@@ -10,19 +10,19 @@ public class CustomerDTO {
     public CustomerDTO() {
     }
 
-    public CustomerDTO(int id, String name, String address, int age) {
-        this.id = id;
+    public CustomerDTO(int customerId, String name, String address, int age) {
+        this.customerId = customerId;
         this.name = name;
         this.address = address;
         this.age = age;
     }
 
-    public int getId() {
-        return id;
+    public int getCustomerId() {
+        return customerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
     }
 
     public String getName() {
@@ -47,5 +47,15 @@ public class CustomerDTO {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomerDTO{" +
+                "customerId=" + customerId +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", age=" + age +
+                '}';
     }
 }

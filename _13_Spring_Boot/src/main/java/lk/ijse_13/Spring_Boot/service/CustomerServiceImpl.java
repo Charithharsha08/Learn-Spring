@@ -3,7 +3,6 @@ package lk.ijse_13.Spring_Boot.service;
 import lk.ijse_13.Spring_Boot.DTO.CustomerDTO;
 import lk.ijse_13.Spring_Boot.entity.Customer;
 import lk.ijse_13.Spring_Boot.repo.CustomerRepo;
-import lk.ijse_13.Spring_Boot.util.ResponseUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +19,7 @@ public class CustomerServiceImpl implements CustomerService{
 
     @Override
     public void saveCustomer(CustomerDTO customerDTO) {
-        if (customerRepo.existsById(customerDTO.getId())) {
+        if (customerRepo.existsById(customerDTO.getCustomerId())) {
             throw new RuntimeException("Customer already exists");
         }
         customerRepo.save
@@ -40,9 +39,9 @@ public class CustomerServiceImpl implements CustomerService{
     }
     @Override
     public void updateCustomer(CustomerDTO customerDTO){
-        if (customerRepo.existsById(customerDTO.getId())) {
-            customerRepo.save
-                    (modelMapper.map(customerDTO, Customer.class));
+        if (customerRepo.existsById(customerDTO.getCustomerId())) {
+            customerRepo.save(modelMapper.map(customerDTO, Customer.class));
+            return;
         }
         throw new RuntimeException("Customer not found");
     }

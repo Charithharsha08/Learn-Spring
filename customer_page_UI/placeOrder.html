@@ -200,7 +200,7 @@
         let selectedOption = $(this).find(":selected");
 
         selectedCustomer = {
-          id: selectedOption.val(),
+          customerId: selectedOption.val(),
           name: selectedOption.data("name"),
           address: selectedOption.data("address"),
           age: selectedOption.data("age"),
@@ -214,7 +214,7 @@
         let selectedOption = $(this).find(":selected");
 
         selectedItem = {
-          id: selectedOption.val(),
+          itemId: selectedOption.val(),
           name: selectedOption.data("name"),
           price: selectedOption.data("price"),
         };
@@ -234,33 +234,7 @@
       let totalPrice = document.getElementById("totalPrice").textContent;
       console.log("Order ID:", orderId , "Item Quantity:", itemQty, "Total Price:", totalPrice);
 
-      /*let orderData = {
-        oid: orderId,
-        customerDTO: selectedCustomer,
-        itemDTO: {
-          ...selectedItem,
-          qty:itemQty
-        },
-        qty: itemQty,
-        total: totalPrice,
-      };
 
-      console.log("Sending order data:", orderData); // Debugging output
-
-      $.ajax({
-        url: "http://localhost:8080/api/v1/placeorder/save",
-        method: "POST",
-        contentType: "application/json",
-        data: JSON.stringify(orderData),
-        success: function (response) {
-          alert("Order placed successfully!");
-          console.log(response);
-        },
-        error: function (error) {
-          alert("Failed to place order.");
-          console.error(error);
-        },
-      });*/
     }
 
     function clearForm() {
@@ -297,11 +271,9 @@
       url: 'http://localhost:8080/api/v1/items/getAll',
       method: 'GET',
       success: function(response) {
-        console.log('Items fetched successfully:', response);
-        response.forEach(item => {
-          console.log(item);
+        response.data.forEach(item => {
           $('#itemSelect').append(
-            `<option value="${item.id}" data-name="${item.name}" data-price="${item.price}">${item.name}</option>`
+            `<option value="${item.itemId }" data-name="${item.name}" data-price="${item.price}">${item.name}</option>`
           );
         });
       },

@@ -2,6 +2,8 @@ package lk.ijse_13.Spring_Boot.controller;
 
 import lk.ijse_13.Spring_Boot.DTO.ItemDTO;
 import lk.ijse_13.Spring_Boot.service.ItemServiceImpl;
+import lk.ijse_13.Spring_Boot.util.ResponseUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,25 +17,27 @@ public class ItemController {
     private ItemServiceImpl itemService;
 
     @PostMapping(path = "save")
-    public String saveItem(@RequestBody ItemDTO itemDto){
-       boolean resultSet = itemService.saveItem(itemDto);
-       return resultSet ? "Success" : "failed";
+    public ResponseUtil saveItem(@RequestBody ItemDTO itemDto){
+        itemService.saveItem(itemDto);
+        return new ResponseUtil(201, "Item saved",null);
     }
     @PutMapping(path = "update")
-    public String updateItem(@RequestBody ItemDTO itemDto){
-        boolean resultSet = itemService.updateItem(itemDto);
-        return resultSet ? "Success" : "failed";
+    public ResponseUtil updateItem(@RequestBody ItemDTO itemDto){
+        System.out.println("Item dto : " + itemDto.getItemId());
+        System.out.println("Item dto : " + itemDto.getName() +" " + itemDto.getPrice() + " " + itemDto.getQty());
+           itemService.updateItem(itemDto);
+           return new ResponseUtil(201, "Item saved",null);
     }
 
     @GetMapping(path = "getAll")
-    public List<ItemDTO> getAllItems(){
+    public ResponseUtil getAllItems(){
         List<ItemDTO> allItems = itemService.getAllItems();
-        return allItems;
+        return new ResponseUtil(200, "Success", allItems);
     }
 
     @DeleteMapping(path = "delete", params = "id")
-    public String deleteItem(@RequestParam("id") int id){
-        boolean resultSet = itemService.deleteItem(id);
-        return resultSet ? "Success" : "failed";
+    public ResponseUtil deleteItem(@RequestParam("id") int id){
+        itemService.deleteItem(id);
+        return new ResponseUtil(200, "Item deleted", null);
     }
 }

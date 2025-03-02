@@ -5,8 +5,8 @@ import lk.ijse_13.Spring_Boot.DTO.ItemDTO;
 import java.util.List;
 
 public interface ItemService {
-    boolean saveItem(ItemDTO itemDTO);
-    boolean deleteItem(int id);
-    boolean updateItem(ItemDTO itemDTO);
+    void saveItem(ItemDTO itemDTO);
+    void deleteItem(int id);
+    void updateItem(ItemDTO itemDTO);
     List<ItemDTO> getAllItems();
 }
