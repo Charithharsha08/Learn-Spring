@@ -19,6 +19,7 @@
         <option value="$PROJECT_DIR$/14.Spring_security/pom.xml" />
         <option value="$PROJECT_DIR$/_14_Spring_security/pom.xml" />
         <option value="$PROJECT_DIR$/_15_Bean_validation/pom.xml" />
+        <option value="$PROJECT_DIR$/_17_Spring_boot_login/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">

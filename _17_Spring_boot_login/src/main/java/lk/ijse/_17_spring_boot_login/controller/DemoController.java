@@ -10,9 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/v1/demo")
 public class DemoController {
     //Trace,Debug,Info,Warn,Error
-    private static final Logger log =  LoggerFactory.getLogger(DemoController.class);
-    @GetMapping
+    private static final Logger log = LoggerFactory.getLogger(DemoController.class);
+
+
+    @GetMapping("log-demo")
     public String logDemo(){
-        return "Demo Controller";
+        log.trace("This is a trace message");
+        log.debug("This is a debug message");
+        log.info("This is an info message");
+        log.warn("This is a warn message");
+        log.error("This is an error message");
+        return "log-demo";
+
     }
 }
